@@ -10,14 +10,11 @@ class PlateDetector:
        detections = sv.Detections.from_yolov8(result)
 
        #detections contains: xyxy, mask, confidence, class_id, tracker_id
-       objects = [
-        {
-            "xyxy": xyxy,
-            "confidence": confidence,
-            "class_id": class_id,
-        }
-        for xyxy, _, confidence, class_id, _ in detections
+       plates_coordinates = [
+        [(int(xyxy[0]), int(xyxy[1])),(int(xyxy[2]), int(xyxy[3]))]
+        for xyxy, _, _, class_id, _ in detections
+        if class_id == 0
        ]
        
-       return objects
+       return plates_coordinates 
 

@@ -1,5 +1,6 @@
-from detect import PlateDetector
+import cv2
 import argparse
+from detect import PlateDetector
 
 
 if __name__ == "__main__":
@@ -8,9 +9,14 @@ if __name__ == "__main__":
     parser.add_argument("--weights", type=str, default="yolov8_carplate.pt", help="path to .pt weights file")
 
     args = parser.parse_args()
-    
+   
+    image = cv2.imread(args.source)
+
     detector = PlateDetector(args.weights)
+    plates = detector.detect_plates(image)    
 
-    objects = detector.detect_plates(args.source)    
+    for plate in plates:
+        cv2.rectangle(image, plate[0], plate[1], (0, 255, 0), 2)
 
-    print(objects)
+    cv2.imshow("frame", image)
+    cv2.waitKey(0)
