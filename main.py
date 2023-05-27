@@ -1,14 +1,16 @@
-from ultralytics import YOLO
+from detect import PlateDetector
 import argparse
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--source", type=str, help="source image to detect")
-    parser.add_argument("--weights", type=str, default="yolov8n.pt", help="path to .pt weights file")
+    parser.add_argument("--weights", type=str, default="yolov8_carplate.pt", help="path to .pt weights file")
 
     args = parser.parse_args()
+    
+    detector = PlateDetector(args.weights)
 
-    model = YOLO(args.weights)
-    model.predict(source=args.source, show=True)
+    objects = detector.detect_plates(args.source)    
 
+    print(objects)
