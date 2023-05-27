@@ -12,6 +12,8 @@ if __name__ == "__main__":
    
     image = cv2.imread(args.source)
 
+    cv2.imshow("original image", image)
+
     detector = PlateDetector(args.weights)
     plates = detector.detect_plates(image)    
 
@@ -21,6 +23,16 @@ if __name__ == "__main__":
         cv2.rectangle(image, plate[0], plate[1], (0, 255, 0), 2)
     
     recognizer = PlateRecognizer()
-    crops[0] = recognizer.preprocess(crops[0])
-    cv2.imshow("frame", crops[0])
+
+    for crop in crops:
+        crop_prep = recognizer.preprocess(crop)
+        cv2.imshow("plate crop", crop_prep)
+        contours = recognizer.get_contours(crop_prep)
+
+        for contour in contours:
+            x, y, w, h = cv2.boundingRect(contour)
+            crop_contours = cv2.rectangle(crop, (x, y), (x+w, y+h), (0,0,255), 2)
+            cv2.imshow("contours", crop_contours)
+        # cv2.imshow("contours", with_contours)
+
     cv2.waitKey(0)
