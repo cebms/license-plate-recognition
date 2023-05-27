@@ -1,7 +1,7 @@
 import cv2
 import argparse
 from detect import PlateDetector
-
+from recognize import PlateRecognizer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -19,7 +19,8 @@ if __name__ == "__main__":
     for plate in plates:
         crops.append(image[plate[0][1]:plate[1][1], plate[0][0]:plate[1][0]])
         cv2.rectangle(image, plate[0], plate[1], (0, 255, 0), 2)
-
-
+    
+    recognizer = PlateRecognizer()
+    crops[0] = recognizer.preprocess(crops[0])
     cv2.imshow("frame", crops[0])
     cv2.waitKey(0)
