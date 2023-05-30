@@ -3,6 +3,7 @@ import cv2
 
 class PlateRecognizer:
     def __init__(self):
+        self.char_recog_tess_config = "-c tessedit_char_whitelist=0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ --psm 8 --oem 3"
         pass
 
     def preprocess(self, image):
@@ -21,6 +22,10 @@ class PlateRecognizer:
         contours, hierarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
 
         return contours
+
+    def recognize_character(self, image):
+       character = pytesseract.image_to_string(image, config=self.char_recog_tess_config) 
+       return character
 
 
 
