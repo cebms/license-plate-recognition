@@ -19,9 +19,12 @@ class PlateRecognizer:
 
     def get_contours(self, image):
         #Find contours considering only external elements
-        contours, hierarchy = cv2.findContours(image, cv2.RETR_EXTERNAL, cv2.CHAIN_APPROX_SIMPLE)
+        contours, hierarchy = cv2.findContours(image, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+        
+        #Sorts contours relative to the x value of their bounding rectangles
+        sorted_contours = sorted(contours, key = lambda contour: cv2.boundingRect(contour)[0])
 
-        return contours
+        return sorted_contours
 
     def recognize_plate(self, plate_crops):
         recognized_plates = []
@@ -31,16 +34,18 @@ class PlateRecognizer:
             contours = self.get_contours(crop_prep)
 
             license_plate = ""
-            for contour in contours: #TODO sort contours by x coordinate
+            count = 0
+            for contour in contours: 
                 x, y, w, h = cv2.boundingRect(contour)
-                if (h >= crop.shape[0] // 2) and (h < int(crop.shape[0] * 0.9)):
+                if (h >= crop.shape[0] // 2) and (h < int(crop.shape[0] * 0.75)):
                     ch = crop_prep[y-2:y+h+2, x-2:x+w+2]
                     ch_inv = cv2.bitwise_not(ch)
-                    # cv2.imshow(f'character {count}', ch_inv)
+                    count += 1
+                    cv2.imshow(f'character {count}', ch_inv)
                     rec_character = self.recognize_character(ch_inv)
                     # print(f"character: {rec_character}")
                     license_plate += rec_character.strip()
-            recognized_plates.append(license_plate[::-1])
+            recognized_plates.append(license_plate)
 
         return recognized_plates
 
