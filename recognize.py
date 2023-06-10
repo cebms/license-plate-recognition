@@ -31,7 +31,7 @@ class PlateRecognizer:
             contours = self.get_contours(crop_prep)
 
             license_plate = ""
-            for contour in contours:
+            for contour in contours: #TODO sort contours by x coordinate
                 x, y, w, h = cv2.boundingRect(contour)
                 if (h >= crop.shape[0] // 2) and (h < int(crop.shape[0] * 0.9)):
                     ch = crop_prep[y-2:y+h+2, x-2:x+w+2]
