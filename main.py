@@ -1,7 +1,4 @@
-import cv2
 import argparse
-from detect import PlateDetector
-from recognize import PlateRecognizer
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -10,9 +7,13 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
    
+    import cv2
     image = cv2.imread(args.source)
 
     cv2.imshow("original image", image)
+
+    from detect import PlateDetector
+    from recognize import PlateRecognizer
 
     detector = PlateDetector(args.weights)
     plates = detector.detect_plates(image)
