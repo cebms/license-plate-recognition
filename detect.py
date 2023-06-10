@@ -1,5 +1,6 @@
 from ultralytics import YOLO
 import supervision as sv
+import cv2
 
 class PlateDetector:
     def __init__(self, weights):
@@ -15,6 +16,15 @@ class PlateDetector:
         for xyxy, _, _, class_id, _ in detections
         if class_id == 0
        ]
+
        
        return plates_coordinates 
+
+
+    def get_crops_from_coord(self, original_img, plates_coords):
+        crops = []
+        for plate in plates_coords:
+           crops.append(original_img[plate[0][1]:plate[1][1], plate[0][0]:plate[1][0]])
+           cv2.rectangle(original_img, plate[0], plate[1], (0, 255, 0), 2)
+        return crops
 
